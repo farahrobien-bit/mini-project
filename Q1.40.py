@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-r = 0.02       # pulley radi us 
+r = 0.02       # pulley radius 
 Lm = 0.005     # motor inductance 
 Rm = 1.0       # motor resistance 
 Km = 0.1       # motor constant 
@@ -65,6 +65,9 @@ def make_plots(name, colour, x_ref, y_ref, x, y, ux, uy, ix, iy):
     # motor angles from the simulated position
     theta_l = (x + y) / r
     theta_r = (x - y) / r
+    # np.gradient is less accurate at the first and last points,
+    # so these few points are not plotted
+    k = slice(20, -20)
 
     fig, ax = plt.subplots(2, 2, figsize=(13, 9))
     fig.suptitle(name, fontsize=14, fontweight='bold')
@@ -78,24 +81,24 @@ def make_plots(name, colour, x_ref, y_ref, x, y, ux, uy, ix, iy):
     ax[0, 0].grid(True)
     ax[0, 0].legend()
 
-    ax[0, 1].plot(t, um_l, label='u_m,l (left)')
-    ax[0, 1].plot(t, um_r, label='u_m,r (right)')
+    ax[0, 1].plot(t[k], um_l[k], label='u_m,l (left)')
+    ax[0, 1].plot(t[k], um_r[k], label='u_m,r (right)')
     ax[0, 1].set_title('Input voltages')
     ax[0, 1].set_xlabel('Time [s]')
     ax[0, 1].set_ylabel('Voltage [V]')
     ax[0, 1].grid(True)
     ax[0, 1].legend()
 
-    ax[1, 0].plot(t, im_l, label='i_m,l (left)')
-    ax[1, 0].plot(t, im_r, label='i_m,r (right)')
+    ax[1, 0].plot(t[k], im_l[k], label='i_m,l (left)')
+    ax[1, 0].plot(t[k], im_r[k], label='i_m,r (right)')
     ax[1, 0].set_title('Motor currents')
     ax[1, 0].set_xlabel('Time [s]')
     ax[1, 0].set_ylabel('Current [A]')
     ax[1, 0].grid(True)
     ax[1, 0].legend()
 
-    ax[1, 1].plot(t, theta_l, label='theta_l (left)')
-    ax[1, 1].plot(t, theta_r, label='theta_r (right)')
+    ax[1, 1].plot(t[k], theta_l[k], label='theta_l (left)')
+    ax[1, 1].plot(t[k], theta_r[k], label='theta_r (right)')
     ax[1, 1].set_title('Motor angles')
     ax[1, 1].set_xlabel('Time [s]')
     ax[1, 1].set_ylabel('Angle [rad]')
